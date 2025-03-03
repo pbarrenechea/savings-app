@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question
+    url: https://github.com/pbarrenechea/savings-app/discussions/new?category=help
+    about: Ask questions and discuss
+  - name: Feature request
+    url: https://github.com/pbarrenechea/savings-app/discussions/new?category=ideas
+    about: Feature requests
