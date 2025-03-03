@@ -1,0 +1,49 @@
+{
+  "app": {
+    "settings": {
+      "settings": "Configuración",
+      "darkMode": "Modo Oscuro",
+      "currency": "Divisa",
+      "language": "Idioma"
+    },
+    "tabs": {
+      "currencies": "Divisas",
+      "savings": "Ahorros",
+      "settings": "Configuración"
+    },
+    "currencies": {
+      "currencies": "Divisas",
+      "newCurrency": "Nueva Divisa",
+      "editCurrency": "Editar divisa",
+      "icon": "Icono",
+      "iconPlaceholder": "Icono, e.g.: 🇪🇺, 🇺🇸, 🇦🇷",
+      "symbol": "Simbolo",
+      "name": "Nombre",
+      "symbolPlaceholder": "Simbolo de la divisa, e.g.: $, €, etc.",
+      "namePlaceholder": "Nombre de la divisa",
+      "referenceValue": "Valor de referencia",
+      "referenceValuePlaceholder": "Valor expresado en la moneda principal",
+      "deleteMessage":"¿Está seguro de eliminar la divisa?"
+    },
+    "savings": {
+      "savings": "Ahorros",
+      "newSaving": "Nuevo ahorro",
+      "editSaving": "Editar Ahorro",
+      "name": "Nombre",
+      "value": "Valor",
+      "currency": "Divisa",
+      "deleteMessage": "¿Está seguro de eliminar el ahorro?",
+      "original": "Original",
+      "conversion": "Conversión"
+    },
+    "errors": {
+      "notValid": "no es válido"
+    },
+    "buttons": {
+      "add": "Añadir",
+      "cancel": "Cancelar",
+      "edit": "Actualizar",
+      "confirm": "Confirmar"
+    }
+  }
+}

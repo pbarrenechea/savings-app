@@ -1,0 +1,49 @@
+{
+  "app" : {
+    "settings": {
+      "settings": "Settings",
+      "darkMode": "Dark Mode",
+      "currency": "Currency",
+      "language": "Language"
+    },
+    "tabs": {
+      "currencies": "Currencies",
+      "savings": "Savings",
+      "settings": "Settings"
+    },
+    "currencies": {
+      "currencies": "Currencies",
+      "newCurrency": "New Currency",
+      "editCurrency": "Edita currency",
+      "icon": "Icon",
+      "iconPlaceholder": "Icon or flag, e.g.: 🇪🇺, 🇺🇸, 🇦🇷",
+      "symbol": "Symbol",
+      "symbolPlaceholder": "Currency symbol, e.g.: $, €, etc.",
+      "name": "Name",
+      "namePlaceholder": "Name of the currency",
+      "referenceValue": "Reference value",
+      "referenceValuePlaceholder": "Reference value against the main currency",
+      "deleteMessage":"Are you sure you want to delete the currency?"
+    },
+    "savings": {
+      "savings": "Savings",
+      "newSaving": "New saving",
+      "editSaving": "Edit Saving",
+      "name": "Name",
+      "value": "Value",
+      "currency": "Currency",
+      "deleteMessage": "Are you sure you want to delete the saving?",
+      "original": "Original",
+      "conversion": "Conversion"
+    },
+    "errors": {
+      "notValid": "is not valid"
+    },
+    "buttons": {
+      "add": "Add",
+      "cancel": "Cancel",
+      "edit": "Update",
+      "confirm": "Confirm"
+    }
+  }
+}
