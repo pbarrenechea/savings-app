@@ -29,10 +29,7 @@ body:
       label: Provide environment information
       description: Include as many relevant details about the environment you experienced the bug in.
       value: |
-        * Sitecore Version:
-        * JSS Version:
-        * Browser Name and version:
+        * Device Name and version:
         * Operating System and version (desktop or mobile):
-        * Link to your project (if available):
     validations:
       required: true
