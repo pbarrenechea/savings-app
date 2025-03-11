@@ -8,66 +8,70 @@ on:
 jobs:
   send_webhook:
     runs-on: ubuntu-latest
+    env:
+      # Assignees
+      ASSIGNEE_BUGS: ${{ secrets.ASSIGNEE_BUGS }}
+      ASSIGNEE_STORIES: ${{ secrets.ASSIGNEE_STORIES }}
+
+      # Custom Fields
+      SPRINT_BUGS: ${{ secrets.SPRINT_BUGS }}
+      SPRINT_QUESTIONS: ${{ secrets.SPRINT_QUESTIONS }}
+      SPRINT_PRODUCT_INPUT: ${{ secrets.SPRINT_PRODUCT_INPUT }}
+      SPRINT_DOCUMENTATION: ${{ secrets.SPRINT_DOCUMENTATION }}
+
+      # Issue Types
+      ISSUE_TYPE_BUG: ${{ secrets.ISSUE_TYPE_BUG }}
+      ISSUE_TYPE_QUESTION: ${{ secrets.ISSUE_TYPE_QUESTION }}
+      ISSUE_TYPE_FEEDBACK: ${{ secrets.ISSUE_TYPE_FEEDBACK }}
+      ISSUE_TYPE_DOCUMENTATION: ${{ secrets.ISSUE_TYPE_DOCUMENTATION }}
+
     steps:
       - name: Determine Values & Send Webhook
-        env:
-          # Assignees
-          ASSIGNEE_BUGS: ${{ secrets.ASSIGNEE_BUGS }}
-          ASSIGNEE_STORIES: ${{ secrets.ASSIGNEE_STORIES }}
-
-          # Custom Fields
-          SPRINT_BUGS: ${{ secrets.SPRINT_BUGS }}
-          SPRINT_QUESTIONS: ${{ secrets.SPRINT_QUESTIONS }}
-          SPRINT_PRODUCT_INPUT: ${{ secrets.SPRINT_PRODUCT_INPUT }}
-          SPRINT_DOCUMENTATION: ${{ secrets.SPRINT_DOCUMENTATION }}
-
-          # Issue Types
-          ISSUE_TYPE_BUG: ${{ secrets.ISSUE_TYPE_BUG }}
-          ISSUE_TYPE_QUESTION: ${{ secrets.ISSUE_TYPE_QUESTION }}
-          ISSUE_TYPE_FEEDBACK: ${{ secrets.ISSUE_TYPE_FEEDBACK }}
-          ISSUE_TYPE_DOCUMENTATION: ${{ secrets.ISSUE_TYPE_DOCUMENTATION }}
-
         run: |
           # Extract Issue Fields
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
-          LABELS_JSON='${{ toJson(github.event.issue.labels) }}'
+          LABELS_JSON="${{ toJson(github.event.issue.labels) }}"
 
           # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
           ISSUE_TYPE="$ISSUE_TYPE_BUG"
 
-          # Parse Labels
-          for row in $(echo "${LABELS_JSON}" | jq -r '.[].name'); do
-            case "$row" in
-              "bug")
-                ASSIGNEE="$ASSIGNEE_BUGS"
-                CUSTOM_FIELD="$SPRINT_BUGS"
-                ISSUE_TYPE="$ISSUE_TYPE_BUG"
-                ;;
-              "documentation")
-                CUSTOM_FIELD="$SPRINT_QUESTIONS"
-                ISSUE_TYPE="$ISSUE_TYPE_QUESTION"
-                ;;
-              "idea")
-                CUSTOM_FIELD="$SPRINT_PRODUCT_INPUT"
-                ISSUE_TYPE="$ISSUE_TYPE_FEEDBACK"
-                ;;
-              "help")
-                CUSTOM_FIELD="$SPRINT_DOCUMENTATION"
-                ISSUE_TYPE="$ISSUE_TYPE_DOCUMENTATION"
-                ;;
-            esac
-          done
+          # Check if labels exist
+          if [[ -z "$LABELS_JSON" || "$LABELS_JSON" == "[]" ]]; then
+            echo "No labels found, using default values."
+          else
+            for row in $(echo "$LABELS_JSON" | jq -r '.[].name'); do
+              case "$row" in
+                "bug")
+                  ASSIGNEE="$ASSIGNEE_BUGS"
+                  CUSTOM_FIELD="$SPRINT_BUGS"
+                  ISSUE_TYPE="$ISSUE_TYPE_BUG"
+                  ;;
+                "documentation")
+                  CUSTOM_FIELD="$SPRINT_QUESTIONS"
+                  ISSUE_TYPE="$ISSUE_TYPE_QUESTION"
+                  ;;
+                "idea")
+                  CUSTOM_FIELD="$SPRINT_PRODUCT_INPUT"
+                  ISSUE_TYPE="$ISSUE_TYPE_FEEDBACK"
+                  ;;
+                "help")
+                  CUSTOM_FIELD="$SPRINT_DOCUMENTATION"
+                  ISSUE_TYPE="$ISSUE_TYPE_DOCUMENTATION"
+                  ;;
+              esac
+            done
+          fi
 
           # Prepare JSON Payload
           JSON_PAYLOAD=$(jq -n \
             --arg summary "$ISSUE_TITLE" \
             --arg description "$ISSUE_DESCRIPTION" \
-            --arg issuetype "$ISSUE_TYPE" \
-            --arg assignee "$ASSIGNEE" \
-            --arg customfield "$CUSTOM_FIELD" \
+            --arg issuetype "${ISSUE_TYPE:-Unknown}" \
+            --arg assignee "${ASSIGNEE:-Unassigned}" \
+            --arg customfield "${CUSTOM_FIELD:-Default}" \
             '{
               summary: $summary,
               description: $description,
