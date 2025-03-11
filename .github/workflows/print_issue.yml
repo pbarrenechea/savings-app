@@ -33,19 +33,10 @@ jobs:
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
 
           # Save JSON to a file
-          echo '${{ toJson(github.event.issue.labels) }}' > raw_labels.json
+          # echo '${{ toJson(github.event.issue.labels) }}' > raw_labels.json
 
           # Debug: Show raw content
-          echo "Raw Labels JSON:"
-          cat raw_labels.json
-
-          # Ensure valid JSON format (remove newlines if necessary)
-          jq -c '.' raw_labels.json > labels.json
-
-          # Extract label names
-          LABELS=$(jq -r '.[].name' labels.json | tr '\n' ' ') # Ensure space-separated format
-
-          echo "Sanitized Labels: $LABELS"
+          LABELS="bug"
 
           # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
