@@ -32,8 +32,7 @@ jobs:
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
 
-
-          # Save JSON to a file
+          # Save JSON to a file to avoid GitHub escaping issues
           echo '${{ toJson(github.event.issue.labels) }}' > raw_labels.json
 
           # Debug: Show raw content
@@ -44,25 +43,22 @@ jobs:
           jq -c '.' raw_labels.json > labels.json
 
           # Extract label names
-          LABELS=$(jq -r '.[].name' labels.json)
+          LABELS=$(jq -r '.[].name' labels.json | tr '\n' ' ') # Ensure space-separated format
 
-          echo "Sanitized Labels:"
-          echo "$LABELS"
-
-          
           echo "Sanitized Labels: $LABELS"
+
           # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
           ISSUE_TYPE="$ISSUE_TYPE_BUG"
           
-          echo "Before parsing"
+          echo "Before parsing labels"
 
           # Check if labels exist
           if [[ -z "$LABELS" || "$LABELS" == "[]" ]]; then
             echo "No labels found, using default values."
           else
-            for row in $(echo "$LABELS" | jq -r '.[].name'); do
+            for row in $LABELS; do
               case "$row" in
                 "bug")
                   ASSIGNEE="$ASSIGNEE_BUGS"
@@ -85,25 +81,27 @@ jobs:
             done
           fi
 
-          echo "$ISSUE_TYPE"
-          echo "$CUSTOM_FIELD"
+          echo "Final Issue Type: $ISSUE_TYPE"
+          echo "Final Custom Field: $CUSTOM_FIELD"
+          echo "Final Assignee: $ASSIGNEE"
           
           echo "Before JSON payload"
+
           # Prepare JSON Payload
           JSON_PAYLOAD=$(jq -n \
             --arg summary "$ISSUE_TITLE" \
             --arg description "$ISSUE_DESCRIPTION" \
-            --arg issuetype "${ISSUE_TYPE}" \
-            --arg assignee "${ASSIGNEE}" \
-            --arg customfield "${CUSTOM_FIELD}" \
+            --arg issuetype "$ISSUE_TYPE" \
+            --arg assignee "$ASSIGNEE" \
+            --arg customfield "$CUSTOM_FIELD" \
             '{
-              summary: $ISSUE_TITLE,
-              description: $ISSUE_DESCRIPTION,
-              issuetype: $ISSUE_TYPE,
-              assignee: $ASSIGNEE,
+              summary: $summary,
+              description: $description,
+              issuetype: $issuetype,
+              assignee: $assignee,
               fields: {
                 team: "659396d5-5200-49f5-9508-29cbc1412b3d-45",
-                customfield_10400: $CUSTOM_FIELD
+                customfield_10400: $customfield
               }
             }')
 
