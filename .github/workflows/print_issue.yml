@@ -70,6 +70,10 @@ jobs:
               esac
             done
           fi
+
+          echo $ISSUE_TYPE
+          echo $CUSTOM_FIELD
+          
           echo "Before JSON payload"
           # Prepare JSON Payload
           JSON_PAYLOAD=$(jq -n \
@@ -79,13 +83,13 @@ jobs:
             --arg assignee "${ASSIGNEE}" \
             --arg customfield "${CUSTOM_FIELD}" \
             '{
-              summary: $summary,
-              description: $description,
-              issuetype: $issuetype,
-              assignee: $assignee,
+              summary: $ISSUE_TITLE,
+              description: $ISSUE_DESCRIPTION,
+              issuetype: $ISSUE_TYPE,
+              assignee: $ASSIGNEE,
               fields: {
                 team: "659396d5-5200-49f5-9508-29cbc1412b3d-45",
-                customfield_10400: $customfield
+                customfield_10400: $CUSTOM_FIELD
               }
             }')
 
