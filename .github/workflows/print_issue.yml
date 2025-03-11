@@ -31,7 +31,8 @@ jobs:
           # Extract Issue Fields
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
-          LABELS_JSON="${{ toJson(github.event.issue.labels) }}"
+          echo '${{ toJson(github.event.issue.labels) }}' | jq '.' > labels.json
+          LABELS_JSON=$(cat labels.json)
 
           # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
