@@ -36,7 +36,7 @@ jobs:
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
           ISSUE_TYPE="$ISSUE_TYPE_BUG"
-          echo '${{ toJson(github.event.issue.labels[0].name) }}'
+          echo '${{ github.event.issue.labels[0].name }}'
           echo "Before parsing labels"
 
           if [[ -z "$LABELS" || "$LABELS" == "[]" ]]; then
