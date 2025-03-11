@@ -70,9 +70,9 @@ jobs:
           JSON_PAYLOAD=$(jq -n \
             --arg summary "$ISSUE_TITLE" \
             --arg description "$ISSUE_DESCRIPTION" \
-            --arg issuetype "${ISSUE_TYPE:-Unknown}" \
-            --arg assignee "${ASSIGNEE:-Unassigned}" \
-            --arg customfield "${CUSTOM_FIELD:-Default}" \
+            --arg issuetype "${ISSUE_TYPE}" \
+            --arg assignee "${ASSIGNEE}" \
+            --arg customfield "${CUSTOM_FIELD}" \
             '{
               summary: $summary,
               description: $description,
