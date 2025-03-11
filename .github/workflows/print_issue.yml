@@ -1,0 +1,15 @@
+name: Print issue
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  log_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Issue Details
+        run: |
+          echo "Issue Title: ${{ github.event.issue.title }}"
+          echo "Issue Number: ${{ github.event.issue.number }}"
+          echo "Issue Body: ${{ github.event.issue.body }}"
+          echo "Issue URL: ${{ github.event.issue.html_url }}"
