@@ -31,9 +31,12 @@ jobs:
           # Extract Issue Fields
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
-          echo '${{ toJson(github.event.issue.labels) }}' | jq '.' > labels.json
-          LABELS_JSON=$(cat labels.json)
-          echo $LABELS_JSON
+          # Save the raw JSON to a file to avoid GitHub escaping issues
+          echo '${{ toJson(github.event.issue.labels) }}' | jq -c '.' > labels.json
+          # Extract label names while ensuring they're sanitized
+          LABELS=$(jq -r '.[].name' labels.json | tr -d '"' )
+
+          echo "Sanitized Labels: $LABELS"
           # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
@@ -42,10 +45,10 @@ jobs:
           echo "Before parsing"
 
           # Check if labels exist
-          if [[ -z "$LABELS_JSON" || "$LABELS_JSON" == "[]" ]]; then
+          if [[ -z "$LABELS" || "$LABELS" == "[]" ]]; then
             echo "No labels found, using default values."
           else
-            for row in $(echo "$LABELS_JSON" | jq -r '.[].name'); do
+            for row in $(echo "$LABELS" | jq -r '.[].name'); do
               case "$row" in
                 "bug")
                   ASSIGNEE="$ASSIGNEE_BUGS"
