@@ -28,24 +28,17 @@ jobs:
     steps:
       - name: Determine Values & Send Webhook
         run: |
-          # Extract Issue Fields
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
 
-          # Save JSON to a file
-          # echo '${{ toJson(github.event.issue.labels) }}' > raw_labels.json
-
-          # Debug: Show raw content
           LABELS="bug"
 
-          # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
           ISSUE_TYPE="$ISSUE_TYPE_BUG"
           
           echo "Before parsing labels"
 
-          # Check if labels exist
           if [[ -z "$LABELS" || "$LABELS" == "[]" ]]; then
             echo "No labels found, using default values."
           else
@@ -78,7 +71,6 @@ jobs:
           
           echo "Before JSON payload"
 
-          # Prepare JSON Payload using proper escaping for Bash variables
           JSON_PAYLOAD=$(jq -n \
             --arg summary "$ISSUE_TITLE" \
             --arg description "$ISSUE_DESCRIPTION" \
