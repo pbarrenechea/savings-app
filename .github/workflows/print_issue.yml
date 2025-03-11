@@ -33,11 +33,13 @@ jobs:
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
           echo '${{ toJson(github.event.issue.labels) }}' | jq '.' > labels.json
           LABELS_JSON=$(cat labels.json)
-
+          echo $LABELS_JSON
           # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
           ISSUE_TYPE="$ISSUE_TYPE_BUG"
+          
+          echo "Before parsing"
 
           # Check if labels exist
           if [[ -z "$LABELS_JSON" || "$LABELS_JSON" == "[]" ]]; then
@@ -65,7 +67,7 @@ jobs:
               esac
             done
           fi
-
+          echo "Before JSON payload"
           # Prepare JSON Payload
           JSON_PAYLOAD=$(jq -n \
             --arg summary "$ISSUE_TITLE" \
