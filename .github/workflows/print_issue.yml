@@ -32,7 +32,7 @@ jobs:
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
 
-          # Save JSON to a file to avoid GitHub escaping issues
+          # Save JSON to a file
           echo '${{ toJson(github.event.issue.labels) }}' > raw_labels.json
 
           # Debug: Show raw content
@@ -87,7 +87,7 @@ jobs:
           
           echo "Before JSON payload"
 
-          # Prepare JSON Payload
+          # Prepare JSON Payload using proper escaping for Bash variables
           JSON_PAYLOAD=$(jq -n \
             --arg summary "$ISSUE_TITLE" \
             --arg description "$ISSUE_DESCRIPTION" \
