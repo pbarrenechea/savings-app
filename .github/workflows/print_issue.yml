@@ -31,11 +31,25 @@ jobs:
           # Extract Issue Fields
           ISSUE_TITLE="${{ github.event.issue.title }}"
           ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
-          # Save the raw JSON to a file to avoid GitHub escaping issues
-          echo '${{ toJson(github.event.issue.labels) }}' | jq -c '.' > labels.json
-          # Extract label names while ensuring they're sanitized
-          LABELS=$(jq -r '.[].name' labels.json | tr -d '"' )
 
+
+          # Save JSON to a file
+          echo '${{ toJson(github.event.issue.labels) }}' > raw_labels.json
+
+          # Debug: Show raw content
+          echo "Raw Labels JSON:"
+          cat raw_labels.json
+
+          # Ensure valid JSON format (remove newlines if necessary)
+          jq -c '.' raw_labels.json > labels.json
+
+          # Extract label names
+          LABELS=$(jq -r '.[].name' labels.json)
+
+          echo "Sanitized Labels:"
+          echo "$LABELS"
+
+          
           echo "Sanitized Labels: $LABELS"
           # Set default values
           ASSIGNEE="$ASSIGNEE_STORIES"
@@ -71,8 +85,8 @@ jobs:
             done
           fi
 
-          echo $ISSUE_TYPE
-          echo $CUSTOM_FIELD
+          echo "$ISSUE_TYPE"
+          echo "$CUSTOM_FIELD"
           
           echo "Before JSON payload"
           # Prepare JSON Payload
