@@ -4,6 +4,9 @@ on:
   issues:
     types:
       - opened
+  discussion:
+    types:
+      - created
 
 jobs:
   send_webhook:
@@ -64,12 +67,6 @@ jobs:
               esac
             done
           fi
-
-          echo "Final Issue Type: $ISSUE_TYPE"
-          echo "Final Custom Field: $CUSTOM_FIELD"
-          echo "Final Assignee: $ASSIGNEE"
-          
-          echo "Before JSON payload"
 
           JSON_PAYLOAD=$(jq -n \
             --arg summary "$ISSUE_TITLE" \
