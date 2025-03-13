@@ -57,7 +57,7 @@ jobs:
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
           ISSUE_TYPE="$ISSUE_TYPE_BUG"
-          echo "Before parsing labels"
+          echo "Labels: $LABELS"
 
           if [[ -z "$LABELS" || "$LABELS" == "[]" ]]; then
             echo "No labels found, using default values."
