@@ -31,15 +31,32 @@ jobs:
     steps:
       - name: Determine Values & Send Webhook
         run: |
-          ISSUE_TITLE="${{ github.event.issue.title }}"
-          ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
+          # Determine if the event is an issue or a discussion
+          if [[ -n "${{ github.event.issue }}" ]]; then
+            ISSUE_TITLE="${{ github.event.issue.title }}"
+            ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
+            echo '${{ toJson(github.event.issue.labels) }}' > labels.json
+          elif [[ -n "${{ github.event.discussion }}" ]]; then
+            ISSUE_TITLE="${{ github.event.discussion.title }}"
+            ISSUE_DESCRIPTION="${{ github.event.discussion.body }}"
+            echo '${{ toJson(github.event.discussion.labels) }}' > labels.json
+          else
+            echo "No issue or discussion found, exiting."
+            exit 1
+          fi
 
-          LABELS="bug"
-
+          echo "Issue/Discussion Title: $ISSUE_TITLE"
+          echo "Issue/Discussion Description: $ISSUE_DESCRIPTION
+          # Debug: Show the raw JSON content
+          echo "Raw Labels JSON:"
+          cat labels.json
+        
+          # Extract label names safely
+          LABELS=$(jq -r '.[].name' labels.json)
+          
           ASSIGNEE="$ASSIGNEE_STORIES"
           CUSTOM_FIELD="$SPRINT_BUGS"
           ISSUE_TYPE="$ISSUE_TYPE_BUG"
-          echo '${{ github.event.issue.labels[0].name }}'
           echo "Before parsing labels"
 
           if [[ -z "$LABELS" || "$LABELS" == "[]" ]]; then
