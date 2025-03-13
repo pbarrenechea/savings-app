@@ -46,7 +46,7 @@ jobs:
           fi
 
           echo "Issue/Discussion Title: $ISSUE_TITLE"
-          echo "Issue/Discussion Description: $ISSUE_DESCRIPTION
+          echo "Issue/Discussion Description: $ISSUE_DESCRIPTION"
           # Debug: Show the raw JSON content
           echo "Raw Labels JSON:"
           cat labels.json
